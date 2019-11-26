@@ -1,7 +1,7 @@
 #ifndef DIFFERENTIALPIPLINE_H
 #define DIFFERENTIALPIPLINE_H
 
-#include <core/chart_object.h>
+#include <core/pipline/base_pipline.h>
 #include <entity/dataentity.h>
 
 #include <QList>
@@ -10,19 +10,14 @@
 /**
  * @brief The DifferentialPipline class  处理微分的pipline
  */
-class DifferentialPipline : public ChartObject {
+class DifferentialPipline : public BasePipline {
   Q_OBJECT
-
- private:
-  QVector<DataEntity*>* currDataFlow = nullptr;
 
  signals:
   void afterDifferential(QString moduleName, QVector<DataEntity*>& list);
 
  public:
-  DifferentialPipline(QObject* parent);
-
-  QVector<DataEntity*>* getCurrDataFlow() const;
+  DifferentialPipline(QString moduleName, QObject* parent = nullptr);
 
  public slots:
   void processOriginalData(QVector<DataEntity*>& list);

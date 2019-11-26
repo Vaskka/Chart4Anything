@@ -20,9 +20,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         chart4anything.cpp \
         core/chart_object.cpp \
+        core/pipline/base_pipline.cpp \
         core/pipline/differential_pipline.cpp \
         core/pipline/integral_pipline.cpp \
         core/pipline/original_pipline.cpp \
+        core/view/view_center.cpp \
         entity/dataentity.cpp \
         exception/chart_exception.cpp \
         main.cpp \
@@ -30,9 +32,11 @@ SOURCES += \
         mainwindow.cpp
 
 HEADERS += \
+    core/pipline/base_pipline.h \
     core/pipline/differential_pipline.h \
     core/pipline/integral_pipline.h \
     core/pipline/original_pipline.h \
+    core/view/view_center.h \
     mainwindow.h \
     chart4anything.h \
     core/chart_object.h \

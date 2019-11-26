@@ -1,18 +1,11 @@
 #include "differential_pipline.h"
 
-QVector<DataEntity*>* DifferentialPipline::getCurrDataFlow() const {
-  return currDataFlow;
-}
-
-DifferentialPipline::DifferentialPipline(QObject* parent)
-    : ChartObject("DifferentialPipline", parent) {}
+DifferentialPipline::DifferentialPipline(QString moduleName, QObject* parent)
+    : BasePipline(moduleName, parent) {}
 
 void DifferentialPipline::processOriginalData(QVector<DataEntity*>& list) {
   // 新数据到达释放原数据空间
-  if (this->currDataFlow != nullptr) {
-    delete this->currDataFlow;
-    this->currDataFlow = nullptr;
-  }
+  this->deleteAndFreeDataFlow();
 
   this->currDataFlow = new QVector<DataEntity*>;
 

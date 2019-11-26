@@ -1,11 +1,7 @@
 #include "original_pipline.h"
 
-QVector<DataEntity*>* OriginalPipline::getCurrDataFlow() const {
-  return currDataFlow;
-}
-
-OriginalPipline::OriginalPipline(QObject* parent)
-    : ChartObject("OriginalPipline", parent) {
+OriginalPipline::OriginalPipline(QString moduleName, QObject* parent)
+    : BasePipline(moduleName, parent) {
   connect(this, &OriginalPipline::readDataDone, this,
           &OriginalPipline::processData);
 }
@@ -32,23 +28,13 @@ void OriginalPipline::readDataFromUri(QString path) {
   }
 
   // read data
-  QDataStream in(&file);
-  qint32 bytesCount = 0;
-  char* rawDataBuffer;
+  QByteArray content = file.readAll();
 
-  // init in heap
-  QByteArray* content = new QByteArray;
-
-  while (!in.atEnd()) {
-    int n = in.readRawData(rawDataBuffer, this->readBytesEach);
-    // cal read bytes number
-    bytesCount += n;
-    // save in QbyteArray
-    content->append(rawDataBuffer);
-  }
+  // read data length
+  qint32 bytesCount = content.length();
 
   // notify upper app that read is done
-  emit readDataDone(fileName, bytesCount, *content);
+  emit readDataDone(fileName, bytesCount, content);
 }
 
 void OriginalPipline::processData(QString fileName,
@@ -63,13 +49,10 @@ void OriginalPipline::processData(QString fileName,
     numberOfBytes++;
   }
 
-  // all of data entity will init in the heap
   // 新数据到达释放原数据空间
-  if (this->currDataFlow != nullptr) {
-    delete this->currDataFlow;
-    this->currDataFlow = nullptr;
-  }
+  this->deleteAndFreeDataFlow();
 
+  this->currDataFlow = new QVector<DataEntity*>;
   for (qint32 i = 0; i < numberOfBytes; i += 2) {
     qint32 higherPart = data.at(i);
     qint32 lowerPart = data.at(i + 1);

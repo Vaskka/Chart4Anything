@@ -1,7 +1,7 @@
 #ifndef INTEGRALPIPLINE_H
 #define INTEGRALPIPLINE_H
 
-#include <core/chart_object.h>
+#include <core/pipline/base_pipline.h>
 #include <entity/dataentity.h>
 
 #include <QList>
@@ -10,17 +10,14 @@
 /**
  * @brief The IntegralPipline class  处理积分的pipline
  */
-class IntegralPipline : public ChartObject {
+class IntegralPipline : public BasePipline {
   Q_OBJECT
- private:
-  QVector<DataEntity*>* currDataFlow = nullptr;
+
  signals:
   void afterIntegral(QString moduleName, QVector<DataEntity*>& list);
 
  public:
-  IntegralPipline(QObject* parent);
-
-  QVector<DataEntity*>* getCurrDataFlow() const;
+  IntegralPipline(QString moduleName, QObject* parent = nullptr);
 
  public slots:
   void processOriginalData(QVector<DataEntity*>& list);

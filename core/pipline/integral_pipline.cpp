@@ -1,18 +1,11 @@
 #include "integral_pipline.h"
 
-QVector<DataEntity*>* IntegralPipline::getCurrDataFlow() const {
-  return currDataFlow;
-}
-
-IntegralPipline::IntegralPipline(QObject* parent)
-    : ChartObject("IntegralPipline", parent) {}
+IntegralPipline::IntegralPipline(QString moduleName, QObject* parent)
+    : BasePipline(moduleName, parent) {}
 
 void IntegralPipline::processOriginalData(QVector<DataEntity*>& list) {
-  // 新数据到达释放原数据空间s
-  if (this->currDataFlow != nullptr) {
-    delete this->currDataFlow;
-    this->currDataFlow = nullptr;
-  }
+  // 新数据到达释放原数据空间
+  this->deleteAndFreeDataFlow();
 
   this->currDataFlow = new QVector<DataEntity*>;
 

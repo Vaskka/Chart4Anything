@@ -5,12 +5,20 @@
 #include <core/pipline/differential_pipline.h>
 #include <core/pipline/integral_pipline.h>
 #include <core/pipline/original_pipline.h>
+#include <core/view/view_center.h>
 
 #include <QObject>
 #include <QVector>
 
 class Chart4Anything : public ChartObject {
   Q_OBJECT
+ signals:
+  /**
+   * @brief allDataFlowReady 全部通道数据 准备完毕
+   * @param piplineList QList&lt;BasePipline\*&sgt;
+   */
+  void allDataFlowReady(QList<BasePipline*> piplineList);
+
  private:
   /**
    * @brief originalPipline 原始通道
@@ -27,8 +35,13 @@ class Chart4Anything : public ChartObject {
    */
   DifferentialPipline* differentialPipline;
 
+  /**
+   * @brief viewCenter 视图中心
+   */
+  ViewCenter* viewCenter;
+
  public:
-  explicit Chart4Anything(QObject* parent);
+  explicit Chart4Anything(QChart* chartRef, QObject* parent);
 
   /**
    * @brief processDataFlow 指定文件路径 并处理成各个通道的结果
@@ -40,7 +53,7 @@ class Chart4Anything : public ChartObject {
    * @brief getCurrentOriginalFlow 获得当前原始通道的数据流
    * @return QVector&lt;DataEntity*&gt;\&
    */
-  QVector<DataEntity*>& getCurrentOriginalFlow() const;
+  QVector<DataEntity*>& getOriginalFlow() const;
 
   /**
    * @brief getDifferentialFlow 获得当前微分通道的数据流
@@ -53,6 +66,27 @@ class Chart4Anything : public ChartObject {
    * @return QVector&lt;DataEntity*&gt;\&
    */
   QVector<DataEntity*>& getIntegralFlow() const;
+
+  /**
+   * @brief drawOriginalDataFlow 绘制原始通道波形
+   */
+  void drawOriginalDataFlow();
+
+  /**
+   * @brief drawDifferentialDataFlow 绘制微分通道波形
+   */
+  void drawDifferentialDataFlow();
+
+  /**
+   * @brief drawIntegralDataFlow 绘制积分通道波形
+   */
+  void drawIntegralDataFlow();
+
+  /**
+   * @brief getViewCenter 当前chart的引用
+   * @return
+   */
+  QChart* getCurrentChartRef() const;
 
  private slots:
 
@@ -77,8 +111,10 @@ class Chart4Anything : public ChartObject {
                                    QVector<DataEntity*>& dataUnitList);
 
   /**
-   * @brief dealExtraProcessDataDone 其他通道的处理完成回调
-   * @param dataFlow processed-data-flows
+   * @brief Chart4Anything::dealExtraProcessDataDone
+   * 处理其他通道解析完毕（after-original）
+   * @param moduleName 模块名
+   * @param dataFlow 数据流引用
    */
   void dealExtraProcessDataDone(QString moduleName,
                                 QVector<DataEntity*>& dataFlow);
