@@ -16,7 +16,8 @@ void IntegralPipline::processOriginalData(QVector<DataEntity*>& list) {
     qint16 integralValue =
         (currDataEntity->getValue() + nextDataEntity->getValue()) / 2;
 
-    DataEntity* integralDataEntity = new DataEntity(i, integralValue);
+    DataEntity* integralDataEntity =
+        new DataEntity(currDataEntity->getNo(), integralValue);
     this->currDataFlow->append(integralDataEntity);
   }
 

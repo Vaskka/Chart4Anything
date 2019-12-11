@@ -20,23 +20,36 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         chart4anything.cpp \
         core/chart_object.cpp \
+        core/controller/data_manager.cpp \
+        core/global_setting.cpp \
         core/pipline/base_pipline.cpp \
         core/pipline/differential_pipline.cpp \
         core/pipline/integral_pipline.cpp \
         core/pipline/original_pipline.cpp \
+        core/view/differential_view.cpp \
+        core/view/integral_view.cpp \
+        core/view/original_view.cpp \
         core/view/view_center.cpp \
         entity/dataentity.cpp \
         exception/chart_exception.cpp \
+        extra/extra_chart_view.cpp \
         main.cpp \
         utils/util.cpp \
         mainwindow.cpp
 
 HEADERS += \
+    core/common.h \
+    core/controller/data_manager.h \
+    core/global_setting.h \
     core/pipline/base_pipline.h \
     core/pipline/differential_pipline.h \
     core/pipline/integral_pipline.h \
     core/pipline/original_pipline.h \
+    core/view/differential_view.h \
+    core/view/integral_view.h \
+    core/view/original_view.h \
     core/view/view_center.h \
+    extra/extra_chart_view.h \
     mainwindow.h \
     chart4anything.h \
     core/chart_object.h \

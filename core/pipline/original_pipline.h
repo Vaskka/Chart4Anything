@@ -21,7 +21,8 @@ class OriginalPipline : public BasePipline {
  signals:
   void readDataDone(const QString fileName,
                     const qint32 fileLength,
-                    QByteArray& fileContent);
+                    QByteArray& fileContent,
+                    qint64 offset);
 
   void processDataDone(const QString fileName,
                        const qint32 dataEntityNumber,
@@ -32,15 +33,18 @@ class OriginalPipline : public BasePipline {
  public:
   OriginalPipline(QString moduleName, QObject* parent = nullptr);
 
-  void processOriginalDataWithUri(QString path);
+  void processOriginalDataWithUri(QString path,
+                                  qint64 offset = 0,
+                                  qint64 length = 50);
 
  private:
-  void readDataFromUri(QString path);
+  void readDataFromUri(QString path, qint64 offset, qint64 length);
 
  private slots:
   void processData(const QString fileName,
                    const qint32 numberOfBytes,
-                   QByteArray& data);
+                   QByteArray& data,
+                   qint64 offset);
 };
 
 #endif  // PIPLINE_H

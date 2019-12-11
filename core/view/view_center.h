@@ -13,13 +13,19 @@ class ViewCenter : public ChartObject {
   QChart* chartRef;
 
  public:
-  ViewCenter(QChart* chartRef, QObject* parent = nullptr);
+  ViewCenter(QString moduleName, QChart* chartRef, QObject* parent = nullptr);
 
   /**
-   * @brief drawDataFlow 向chart中绘制指定的数据
-   * @param dataFlow 数据流
+   * @brief drawFlowWithLineSeries 绘制曲线
+   * @param lineSeries
    */
-  void drawDataFlow(QVector<DataEntity*>* dataFlow);
+  void drawFlowWithLineSeries(QLineSeries* lineSeries);
+
+  /**
+   * @brief removeFlowWithLineSeries 取消绘制
+   * @param lineSeries
+   */
+  void removeFlowWithLineSeries(QLineSeries* lineSeries);
 
   /**
    * @brief getChartRef 内部QChart引用

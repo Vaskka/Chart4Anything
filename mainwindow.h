@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <extra/extra_chart_view.h>
+
 #include <QMainWindow>
 
 #include "chart4anything.h"
@@ -25,20 +27,57 @@ class MainWindow : public QMainWindow {
   void on_selectfile_clicked();
 
   /**
-   * @brief MainWindow::on_show_origin_pipline_triggered 显示原始通道点击回调
+   * @brief on_originalChannelShow_triggered 原始通道显示回调
    */
-  void on_show_origin_pipline_triggered();
+  void on_originalChannelShow_triggered();
 
   /**
-   * @brief MainWindow::on_show_differential_pipline_triggered 显示微分通道回调
+   * @brief on_originalChannelRemove_triggered 原始通道关闭回调
    */
-  void on_show_differential_pipline_triggered();
+  void on_originalChannelRemove_triggered();
 
-  void on_show_integral_pipline_triggered();
+  /**
+   * @brief on_differentialChannelShow_triggered 微分通道显示回调
+   */
+  void on_differentialChannelShow_triggered();
+
+  /**
+   * @brief on_differentChannelRemove_triggered 微分通道关闭回调
+   */
+  void on_differentChannelRemove_triggered();
+
+  /**
+   * @brief on_integralChannelShow_triggered 积分通道显示回调
+   */
+  void on_integralChannelShow_triggered();
+
+  /**
+   * @brief on_integralChannelRemove_triggered 积分通道关闭回调
+   */
+  void on_integralChannelRemove_triggered();
+
+  /**
+   * @brief on_reset_clicked 重置按钮点击回调
+   */
+  void on_reset_clicked();
+
+  /**
+   * @brief originalScroll 原始通道平移回调
+   * @param dx
+   * @param dy
+   */
+  void dealWithScroll(qint32 dx, qint32 dy);
 
  private:
   Ui::MainWindow* ui;
 
   Chart4Anything* core;
+
+  ExtraChartView* original;
+  ExtraChartView* different;
+  ExtraChartView* integral;
+
+  // file length control
+  qint64 offset = 0;
 };
 #endif  // MAINWINDOW_H

@@ -1,23 +1,20 @@
 #ifndef CHART_4_ANYTHING_H
 #define CHART_4_ANYTHING_H
 
-#include <core/chart_object.h>
+#include <core/common.h>
+#include <core/controller/data_manager.h>
 #include <core/pipline/differential_pipline.h>
 #include <core/pipline/integral_pipline.h>
 #include <core/pipline/original_pipline.h>
-#include <core/view/view_center.h>
+#include <core/view/differential_view.h>
+#include <core/view/integral_view.h>
+#include <core/view/original_view.h>
 
 #include <QObject>
 #include <QVector>
 
 class Chart4Anything : public ChartObject {
   Q_OBJECT
- signals:
-  /**
-   * @brief allDataFlowReady 全部通道数据 准备完毕
-   * @param piplineList QList&lt;BasePipline\*&sgt;
-   */
-  void allDataFlowReady(QList<BasePipline*> piplineList);
 
  private:
   /**
@@ -36,18 +33,41 @@ class Chart4Anything : public ChartObject {
   DifferentialPipline* differentialPipline;
 
   /**
-   * @brief viewCenter 视图中心
+   * @brief controller 控制层
    */
-  ViewCenter* viewCenter;
+  DataManager* controller;
+
+  /**
+   * @brief viewCenter 原始视图层
+   */
+  OriginalView* originalView;
+
+  /**
+   * @brief differentialView 微分视图层
+   */
+  DifferentialView* differentialView;
+
+  /**
+   * @brief integralView 积分视图层
+   */
+  IntegralView* integralView;
+
+  /**
+   * @brief currentFilePath 当前展示的文件路径
+   */
+  QString currentFilePath;
 
  public:
-  explicit Chart4Anything(QChart* chartRef, QObject* parent);
+  explicit Chart4Anything(QChart* originalChartRef,
+                          QChart* differentialChartRef,
+                          QChart* integralChartRef,
+                          QObject* parent);
 
   /**
    * @brief processDataFlow 指定文件路径 并处理成各个通道的结果
    * @param path 文件路径
    */
-  void processDataFlow(QString path);
+  void processDataFlow(QString path, qint64 offset, qint64 length);
 
   /**
    * @brief getCurrentOriginalFlow 获得当前原始通道的数据流
@@ -68,25 +88,66 @@ class Chart4Anything : public ChartObject {
   QVector<DataEntity*>& getIntegralFlow() const;
 
   /**
-   * @brief drawOriginalDataFlow 绘制原始通道波形
+   * @brief resetOffset
+   * 重置信号偏移，当前数据释放，重新从文件的offset读取length个data，并传递给对应通道处理
+   * @param offset 偏移量
+   * @param length 长度
    */
-  void drawOriginalDataFlow();
+  void resetOffset(qint64 offset, qint64 length);
 
   /**
-   * @brief drawDifferentialDataFlow 绘制微分通道波形
+   * @brief drawOriginalChannal 绘制原始通道
    */
-  void drawDifferentialDataFlow();
+  void drawOriginalChannal();
 
   /**
-   * @brief drawIntegralDataFlow 绘制积分通道波形
+   * @brief drawDifferentialChannel 绘制微分通道
    */
-  void drawIntegralDataFlow();
+  void drawDifferentialChannel();
 
   /**
-   * @brief getViewCenter 当前chart的引用
+   * @brief drawIntegralChannel 绘制积分通道
+   */
+  void drawIntegralChannel();
+
+  /**
+   * @brief removeOriginChannel 移除原始通道图像
+   */
+  void removeOriginChannel();
+
+  /**
+   * @brief removeDifferentialChannel 移除微分通道图像
+   */
+  void removeDifferentialChannel();
+
+  /**
+   * @brief removeIntegralChannel 移除积分通道图像
+   */
+  void removeIntegralChannel();
+
+  /**
+   * @brief getCurrentOriginalChartRef 当前chart的引用
    * @return
    */
-  QChart* getCurrentChartRef() const;
+  QChart* getCurrentOriginalChartRef() const;
+
+  /**
+   * @brief getCurrentDifferentialChartRef 获得微分的chart引用
+   * @return
+   */
+  QChart* getCurrentDifferentialChartRef() const;
+
+  /**
+   * @brief getCurrentIntegralChartRef 获得积分的chart引用
+   * @return
+   */
+  QChart* getCurrentIntegralChartRef() const;
+
+  /**
+   * @brief getDataMapping 获取数据视图mapping
+   * @return QMap
+   */
+  QMap<QString, QLineSeries*> getDataLineSeriesMapping() const;
 
  private slots:
 
@@ -124,6 +185,14 @@ class Chart4Anything : public ChartObject {
    * @param exception ChartException 异常信息
    */
   void dealCatchError(ChartException& exception);
+
+  /**
+   * @brief dealMappingDone 处理数据视图映射完成回调
+   * @param channelName 通道名称
+   * @param currentMapping currentMapping
+   */
+  void dealMappingDone(QString channelName,
+                       QMap<QString, QLineSeries*>& currentMapping);
 };
 
 #endif  // CHART4ANYTHING_H

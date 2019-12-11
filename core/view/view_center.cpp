@@ -4,28 +4,31 @@ QChart* ViewCenter::getChartRef() const {
   return chartRef;
 }
 
-ViewCenter::ViewCenter(QChart* chartRef, QObject* parent)
-    : ChartObject("ViewCenter", parent) {
+ViewCenter::ViewCenter(QString moduleName, QChart* chartRef, QObject* parent)
+    : ChartObject(moduleName, parent) {
   this->chartRef = chartRef;
 }
 
-/**
- * @brief drawDataFlow 向chart中绘制指定的数据
- * @param dataFlow 数据流
- */
-void ViewCenter::drawDataFlow(QVector<DataEntity*>* dataFlow) {
-  // 还没有数据 不更改Chart
-  if (dataFlow == nullptr) {
+void ViewCenter::drawFlowWithLineSeries(QLineSeries* lineSeries) {
+  if (lineSeries == nullptr) {
     return;
   }
 
-  QLineSeries* series = new QLineSeries();
+  this->chartRef->addSeries(lineSeries);
+  qint64 minX = lineSeries->at(0).x();
+  qint64 maxX = lineSeries->at(lineSeries->count() - 1).x();
 
-  for (qint32 i = 0; i < dataFlow->length(); i++) {
-    DataEntity* currDataEntity = dataFlow->at(i);
-    series->append(currDataEntity->getNo(), currDataEntity->getValue());
+  qDebug() << "minX:" << minX;
+  qDebug() << "maxX:" << maxX;
+
+  this->chartRef->createDefaultAxes();
+  this->chartRef->axisX()->setRange(minX, maxX);
+}
+
+void ViewCenter::removeFlowWithLineSeries(QLineSeries* lineSeries) {
+  if (lineSeries == nullptr) {
+    return;
   }
 
-  this->chartRef->addSeries(series);
-  this->chartRef->createDefaultAxes();
+  this->chartRef->removeSeries(lineSeries);
 }

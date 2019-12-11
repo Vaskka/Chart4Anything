@@ -1,16 +1,22 @@
 #include "original_pipline.h"
 
+#include <core/global_setting.h>
+
 OriginalPipline::OriginalPipline(QString moduleName, QObject* parent)
     : BasePipline(moduleName, parent) {
   connect(this, &OriginalPipline::readDataDone, this,
           &OriginalPipline::processData);
 }
 
-void OriginalPipline::processOriginalDataWithUri(QString path) {
-  this->readDataFromUri(path);
+void OriginalPipline::processOriginalDataWithUri(QString path,
+                                                 qint64 offset,
+                                                 qint64 length) {
+  this->readDataFromUri(path, offset, length);
 }
 
-void OriginalPipline::readDataFromUri(QString path) {
+void OriginalPipline::readDataFromUri(QString path,
+                                      qint64 offset,
+                                      qint64 length) {
   QFile file(path);
   QString fileName = Util::fromPathGetFileName(path);
 
@@ -28,21 +34,27 @@ void OriginalPipline::readDataFromUri(QString path) {
   }
 
   // read data
-  QByteArray content = file.readAll();
+  QFileInfo fileInfo(file);
+  QByteArray content;
 
+  if (file.seek(offset)) {
+    content += file.read(length);
+  }
+
+  file.close();
   // read data length
   qint32 bytesCount = content.length();
 
   // notify upper app that read is done
-  emit readDataDone(fileName, bytesCount, content);
+  emit readDataDone(fileName, bytesCount, content, offset);
 }
 
 void OriginalPipline::processData(QString fileName,
                                   qint32 numberOfBytes,
-                                  QByteArray& data) {
+                                  QByteArray& data,
+                                  qint64 offset) {
   // make sure data have even bytes
   // becase of short take 2 bytes
-
   if (numberOfBytes % 2 != 0) {
     // copy last byte
     data.append(data.at(numberOfBytes - 1));
@@ -53,7 +65,7 @@ void OriginalPipline::processData(QString fileName,
   this->deleteAndFreeDataFlow();
 
   this->currDataFlow = new QVector<DataEntity*>;
-  for (qint32 i = 0; i < numberOfBytes; i += 2) {
+  for (qint32 i = 0; i < numberOfBytes - 1; i += 2) {
     qint32 higherPart = data.at(i);
     qint32 lowerPart = data.at(i + 1);
 
@@ -63,7 +75,7 @@ void OriginalPipline::processData(QString fileName,
     value += lowerPart;
 
     // init data entity
-    DataEntity* entity = new DataEntity(i, value);
+    DataEntity* entity = new DataEntity(offset + i, value);
 
     this->currDataFlow->append(entity);
   }

@@ -15,7 +15,7 @@ void DifferentialPipline::processOriginalData(QVector<DataEntity*>& list) {
 
     qint16 diffValue = nextDataEntity->getValue() - currDataEntity->getValue();
 
-    DataEntity* diffEntity = new DataEntity(i, diffValue);
+    DataEntity* diffEntity = new DataEntity(currDataEntity->getNo(), diffValue);
     this->currDataFlow->append(diffEntity);
   }
 
