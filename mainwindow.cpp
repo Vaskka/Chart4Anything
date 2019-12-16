@@ -109,7 +109,7 @@ void MainWindow::on_reset_clicked() {
  * @param dy
  */
 void MainWindow::dealWithScroll(qint32 dx, qint32 dy) {
-  this->offset += dx;
+  this->offset += (dx * 0.5);
 
   if (offset < 0) {
     offset = 0;

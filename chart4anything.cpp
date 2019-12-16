@@ -240,15 +240,13 @@ void Chart4Anything::dealCatchError(ChartException& exception) {
 void Chart4Anything::dealMappingDone(
     QString channelName,
     QMap<QString, QLineSeries*>& currentMapping) {
-  // 根据通道名渲染对应的图像
-  if (channelName == this->originalPipline->getModuleName()) {
-    // 渲染原始图像
-    this->originalView->drawFlowWithLineSeries(currentMapping[channelName]);
-  } else if (channelName == this->differentialView->getModuleName()) {
-    // 渲染微分图像
-    this->differentialView->drawFlowWithLineSeries(currentMapping[channelName]);
-  } else if (channelName == this->integralView->getModuleName()) {
-    // 渲染积分图像
-    this->integralView->drawFlowWithLineSeries(currentMapping[channelName]);
-  }
+  // clean display
+  this->removeOriginChannel();
+  this->removeDifferentialChannel();
+  this->removeIntegralChannel();
+
+  // redraw on display
+  this->drawOriginalChannal();
+  this->drawDifferentialChannel();
+  this->drawIntegralChannel();
 }
