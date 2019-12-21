@@ -1,5 +1,7 @@
 #include "view_center.h"
 
+#include <utils/util.h>
+
 QChart* ViewCenter::getChartRef() const {
   return chartRef;
 }
@@ -21,8 +23,8 @@ void ViewCenter::drawFlowWithLineSeries(QLineSeries* lineSeries) {
   qDebug() << "minX:" << minX;
   qDebug() << "maxX:" << maxX;
 
-  qint16 maxY = 0x7FFF;
-  qint16 minY = 0x8000;
+  qint16 maxY = Util::UPPER;
+  qint16 minY = Util::LOWER;
   this->chartRef->addSeries(lineSeries);
   this->chartRef->createDefaultAxes();
 

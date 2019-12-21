@@ -8,6 +8,9 @@ class Util {
  public:
   Util();
 
+  static const qint16 UPPER = 0x7FFF;
+  static const qint16 LOWER = 0x8000;
+
   /**
    * @brief Util::fromPathGetFileName 使用路径名得到文件名
    * @param path 文件路径

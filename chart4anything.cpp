@@ -9,9 +9,9 @@ Chart4Anything::Chart4Anything(QChart* originalChartRef,
   GlobalSetting::getInstance()->initSetting(SETTING_PATH);
 
   // model 层
-  this->originalPipline = new OriginalPipline("Original", this);
-  this->integralPipline = new IntegralPipline("Integer", this);
-  this->differentialPipline = new DifferentialPipline("Differential", this);
+  this->originalPipline = new OriginalPipline(ORIGINAL_NAME, this);
+  this->integralPipline = new IntegralPipline(INTEGRAL_NAME, this);
+  this->differentialPipline = new DifferentialPipline(DIFFERENTIAL_NAME, this);
 
   // controller 层
   this->controller = new DataManager;

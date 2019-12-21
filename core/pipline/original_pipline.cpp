@@ -37,6 +37,7 @@ void OriginalPipline::readDataFromUri(QString path,
   QFileInfo fileInfo(file);
   QByteArray content;
 
+  // read from specific offset
   if (file.seek(offset)) {
     content += file.read(length);
   }

@@ -20,7 +20,6 @@ class BasePipline : public ChartObject {
  protected:
   /**
    * @brief deleteAndFreeDataEntities 删除容器和释放内部元素内存引用
-   * @param vector QVector&lt;DataEntity\*&gt;\*
    */
   void deleteAndFreeDataFlow();
 

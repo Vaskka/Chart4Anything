@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+#include <core/common.h>
+
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget* parent)
@@ -109,7 +111,7 @@ void MainWindow::on_reset_clicked() {
  * @param dy
  */
 void MainWindow::dealWithScroll(qint32 dx, qint32 dy) {
-  this->offset += (dx * 0.5);
+  this->offset += (dx * MOVE_CONSTANT);
 
   if (offset < 0) {
     offset = 0;

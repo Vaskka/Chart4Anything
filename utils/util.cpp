@@ -1,5 +1,7 @@
 #include "util.h"
 
+#include <core/common.h>
+
 Util::Util() {}
 
 /**
@@ -32,12 +34,5 @@ QString Util::fromPathGetFileName(QString path) {
  * @return QString
  */
 QByteArray Util::getExampleSettingFileContent() {
-  return "{ \
-           \"each_number\": 200, \
-           \"color\": { \
-               \"original\": [153, 102, 0], \
-               \"differential\": [204, 51, 0], \
-               \"integral\": [0, 102, 255] \
-           } \
-       }";
+  return DEFAULT_SETTING_CONTENT;
 }

@@ -1,5 +1,7 @@
 #include "global_setting.h"
 
+#include "common.h"
+
 // single mode
 GlobalSetting* GlobalSetting::instance = nullptr;
 
@@ -93,16 +95,16 @@ void GlobalSetting::initSetting(QString settingPath) {
     // 原始通道颜色
     QJsonObject color = root["color"].toObject();
 
-    QVariantList originalColor = color["original"].toArray().toVariantList();
+    QVariantList originalColor = color[ORIGINAL_NAME].toArray().toVariantList();
     QVariantList differentialColor =
-        color["differential"].toArray().toVariantList();
-    QVariantList integralColor = color["integral"].toArray().toVariantList();
+        color[DIFFERENTIAL_NAME].toArray().toVariantList();
+    QVariantList integralColor = color[INTEGRAL_NAME].toArray().toVariantList();
 
     // 暂存在map中
     innerSettingMap.insert("each_number", QVariant(eachNodes));
-    innerSettingMap.insert("original", QVariant(originalColor));
-    innerSettingMap.insert("differential", QVariant(differentialColor));
-    innerSettingMap.insert("integral", QVariant(integralColor));
+    innerSettingMap.insert(ORIGINAL_NAME, QVariant(originalColor));
+    innerSettingMap.insert(DIFFERENTIAL_NAME, QVariant(differentialColor));
+    innerSettingMap.insert(INTEGRAL_NAME, QVariant(integralColor));
 
     // 标记初始化已完成
     this->ready = true;
@@ -116,16 +118,17 @@ void GlobalSetting::initSetting(QString settingPath) {
  */
 QColor GlobalSetting::getChannelColor(QString channelName) {
   QString lower = channelName.toLower();
-  if (lower.contains("original")) {
-    return fromQVariantListToQColor(innerSettingMap["original"].toList());
+  if (lower.contains(ORIGINAL_NAME)) {
+    return fromQVariantListToQColor(innerSettingMap[ORIGINAL_NAME].toList());
   }
 
-  if (lower.contains("differential")) {
-    return fromQVariantListToQColor(innerSettingMap["differential"].toList());
+  if (lower.contains(DIFFERENTIAL_NAME)) {
+    return fromQVariantListToQColor(
+        innerSettingMap[DIFFERENTIAL_NAME].toList());
   }
 
-  if (lower.contains("integral")) {
-    return fromQVariantListToQColor(innerSettingMap["integral"].toList());
+  if (lower.contains(INTEGRAL_NAME)) {
+    return fromQVariantListToQColor(innerSettingMap[INTEGRAL_NAME].toList());
   }
 
   // default color
